@@ -20,7 +20,11 @@ public static class DbSeeder
         var roleManager = sp.GetRequiredService<RoleManager<IdentityRole>>();
         var logger = sp.GetRequiredService<ILogger<AppDbContext>>();
 
-        await db.Database.MigrateAsync();
+        // Relational providers apply migrations; the in-memory provider (tests) just creates the schema.
+        if (db.Database.IsRelational())
+            await db.Database.MigrateAsync();
+        else
+            await db.Database.EnsureCreatedAsync();
 
         await SeedRolesAsync(roleManager);
         var (admin, customer) = await SeedUsersAsync(userManager);

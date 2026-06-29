@@ -85,7 +85,7 @@ public class OrderEventWorker : BackgroundService
         return null;
     }
 
-    private async Task HandleMessageAsync(string message, CancellationToken ct)
+    internal async Task HandleMessageAsync(string message, CancellationToken ct)
     {
         try
         {

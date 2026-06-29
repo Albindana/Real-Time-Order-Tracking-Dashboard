@@ -1,0 +1,45 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: rtod-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./src
+      dockerfile: RealTimeDashboard.API/Dockerfile
+    container_name: rtod-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Data Source=/data/dashboard.db
+      - Redis__ConnectionString=redis:6379
+      - JwtSettings__SecretKey=docker-super-secret-key-min-32-characters!!
+      - JwtSettings__Issuer=RealTimeDashboard
+      - JwtSettings__Audience=DashboardClient
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - api-data:/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rtod-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
+volumes:
+  api-data:

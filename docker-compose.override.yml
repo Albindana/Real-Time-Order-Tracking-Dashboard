@@ -1,0 +1,14 @@
+# Automatically merged by `docker compose up`. Local development conveniences:
+# keep services restarting and surface verbose API logs.
+services:
+  redis:
+    restart: unless-stopped
+
+  api:
+    restart: unless-stopped
+    environment:
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft.AspNetCore=Warning
+
+  frontend:
+    restart: unless-stopped
