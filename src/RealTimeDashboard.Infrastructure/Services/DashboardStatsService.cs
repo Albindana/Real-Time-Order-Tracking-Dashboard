@@ -58,9 +58,13 @@ public class DashboardStatsService : IDashboardStatsService
         var todaysOrders = _db.Orders.AsNoTracking().Where(o => o.CreatedAt >= todayUtc);
 
         var totalOrdersToday = await todaysOrders.CountAsync(ct);
-        var revenueToday = await todaysOrders
+
+        // SQLite can't translate SUM over decimal, so pull today's non-cancelled amounts and sum locally.
+        var todaysAmounts = await todaysOrders
             .Where(o => o.Status != OrderStatus.Cancelled)
-            .SumAsync(o => (decimal?)o.TotalAmount, ct) ?? 0m;
+            .Select(o => o.TotalAmount)
+            .ToListAsync(ct);
+        var revenueToday = todaysAmounts.Sum();
         var pendingOrders = await _db.Orders.AsNoTracking()
             .CountAsync(o => o.Status == OrderStatus.Pending, ct);
 

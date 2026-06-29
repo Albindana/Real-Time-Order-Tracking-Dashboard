@@ -38,11 +38,8 @@ public class OrderEventWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var subscriber = _redis.GetSubscriber();
-
-        await subscriber.SubscribeAsync(
-            RedisChannel.Literal(RedisKeys.OrderEventsChannel),
-            (channel, message) => _ = HandleMessageAsync(message!, stoppingToken));
+        var subscriber = await SubscribeWithRetryAsync(stoppingToken);
+        if (subscriber is null) return; // cancelled before we ever connected
 
         _logger.LogInformation("OrderEventWorker subscribed to '{Channel}'", RedisKeys.OrderEventsChannel);
 
@@ -56,8 +53,36 @@ public class OrderEventWorker : BackgroundService
         }
         finally
         {
-            await subscriber.UnsubscribeAllAsync();
+            if (_redis.IsConnected)
+                await subscriber.UnsubscribeAllAsync();
         }
+    }
+
+    // Redis may not be ready when the host boots (e.g. docker-compose ordering). Retry instead
+    // of letting an unhandled exception tear down the whole host.
+    private async Task<ISubscriber?> SubscribeWithRetryAsync(CancellationToken stoppingToken)
+    {
+        var delay = TimeSpan.FromSeconds(2);
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                var subscriber = _redis.GetSubscriber();
+                await subscriber.SubscribeAsync(
+                    RedisChannel.Literal(RedisKeys.OrderEventsChannel),
+                    (channel, message) => _ = HandleMessageAsync(message!, stoppingToken));
+                return subscriber;
+            }
+            catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
+            {
+                _logger.LogWarning("Redis not available yet ({Message}); retrying in {Delay}s.",
+                    ex.Message, delay.TotalSeconds);
+                try { await Task.Delay(delay, stoppingToken); }
+                catch (TaskCanceledException) { return null; }
+                delay = TimeSpan.FromSeconds(Math.Min(delay.TotalSeconds * 2, 30));
+            }
+        }
+        return null;
     }
 
     private async Task HandleMessageAsync(string message, CancellationToken ct)
