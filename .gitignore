@@ -1,0 +1,32 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+*.db
+*.db-shm
+*.db-wal
+
+# Rider/VS
+.idea/
+.vs/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+dist/
+*.local
+
+# Env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

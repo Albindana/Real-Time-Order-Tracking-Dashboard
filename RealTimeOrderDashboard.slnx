@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/RealTimeDashboard.API/RealTimeDashboard.API.csproj" />
+    <Project Path="src/RealTimeDashboard.Application/RealTimeDashboard.Application.csproj" />
+    <Project Path="src/RealTimeDashboard.Domain/RealTimeDashboard.Domain.csproj" />
+    <Project Path="src/RealTimeDashboard.Infrastructure/RealTimeDashboard.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/RealTimeDashboard.Tests/RealTimeDashboard.Tests.csproj" />
+  </Folder>
+</Solution>
