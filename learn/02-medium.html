@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🟡 Medium — Real-Time Order Tracking Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Arial', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: #333; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .slide { background: white; border-radius: 20px; padding: 60px; margin: 40px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-height: 80vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .title-slide { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); color: white; text-align: center; }
+        .title-slide h1 { font-size: 4em; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .title-slide .subtitle { font-size: 1.5em; opacity: 0.9; margin-bottom: 40px; }
+        .session-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 10px 30px; border-radius: 50px; font-size: 1.2em; margin-top: 20px; }
+        h2 { color: #d97706; font-size: 2.5em; margin-bottom: 30px; border-bottom: 4px solid #4856F6; padding-bottom: 15px; }
+        h3 { color: #212121; font-size: 1.8em; margin: 30px 0 20px 0; }
+        h4 { color: #78909C; font-size: 1.4em; margin: 25px 0 15px 0; }
+        p { font-size: 1.2em; line-height: 1.8; margin-bottom: 20px; }
+        .concept-box { background: #f5f5f5; border-left: 5px solid #d97706; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .concept-box strong { color: #d97706; font-size: 1.3em; }
+        .highlight { background: #fff3e0; padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #EC8423; }
+        code { background: #263238; color: #aed581; padding: 3px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.95em; }
+        pre { background: #263238; color: #aed581; padding: 20px; border-radius: 10px; overflow-x: auto; margin: 20px 0; font-size: 1em; line-height: 1.6; }
+        ul, ol { margin-left: 40px; margin-bottom: 20px; }
+        li { font-size: 1.1em; line-height: 1.8; margin-bottom: 12px; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0; }
+        .column { background: #f8f9fa; padding: 20px; border-radius: 10px; }
+        .flow-diagram { background: white; border: 2px solid #d97706; padding: 30px; border-radius: 10px; margin: 30px 0; font-size: 1.05em; line-height: 1.9; }
+        .layer { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 18px; margin: 10px 0; border-radius: 8px; border-left: 5px solid #d97706; font-weight: 600; font-size: 1.05em; }
+        .key-takeaway { background: #fff3e0; border-left: 5px solid #EC8423; padding: 20px; margin: 30px 0; border-radius: 5px; font-size: 1.1em; }
+        .key-takeaway::before { content: "🎯 Key Takeaway: "; font-weight: bold; color: #EC8423; }
+        .interview { background: #ede9fe; border-left: 5px solid #7c3aed; padding: 20px 25px; margin: 20px 0; border-radius: 8px; }
+        .interview .q { font-weight: 700; color: #6d28d9; font-size: 1.15em; margin-bottom: 8px; }
+        .interview .a { font-size: 1.1em; line-height: 1.7; color: #333; }
+        .level-pill { position: absolute; top: 25px; right: 35px; background: #f59e0b; color: white; padding: 6px 18px; border-radius: 50px; font-weight: 700; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.98em; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #d97706; color: white; font-weight: 600; }
+        tr:hover { background: #f5f5f5; }
+        @media print { .slide { page-break-after: always; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="slide title-slide">
+        <div class="session-badge" style="margin-bottom:30px;">LEVEL 2 OF 3</div>
+        <h1>🟡 Medium</h1>
+        <div class="subtitle">How does it actually work?</div>
+        <p style="margin-top: 20px; font-size: 1.2em; opacity: 0.95;">Clean architecture · the real-time flow · auth · Redis roles</p>
+    </div>
+
+    <!-- Architecture -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>Clean Architecture — 4 Layers</h2>
+        <p>Each layer only depends on the ones "inside" it. Dependencies point <strong>inward</strong>.</p>
+        <div class="layer">🟦 <strong>API</strong> — entry point: HTTP controllers, <code>Program.cs</code>, middleware</div>
+        <div class="layer">🟩 <strong>Application</strong> — the "what": business logic, interfaces, DTOs, validators</div>
+        <div class="layer">🟨 <strong>Infrastructure</strong> — the "how": EF Core, Redis, JWT, SignalR hub, background worker</div>
+        <div class="layer">🟥 <strong>Domain</strong> — core business objects, zero dependencies</div>
+        <div class="key-takeaway">Why split it up? So business rules don't get tangled with database/framework details. You can swap SQLite → SQL Server without touching business logic, and unit-test against interfaces.</div>
+    </div>
+
+    <!-- Layer table -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>What Lives in Each Layer</h2>
+        <table>
+            <tr><th>Project</th><th>Responsibility</th><th>Example contents</th></tr>
+            <tr><td><strong>Domain</strong></td><td>Core business objects, no dependencies</td><td><code>Order</code>, <code>Product</code>, <code>OrderItem</code>, <code>AppUser</code>, <code>OrderStatus</code></td></tr>
+            <tr><td><strong>Application</strong></td><td>The "what" — logic & contracts</td><td><code>OrderService</code>, <code>IOrderService</code>, DTOs, validators, <code>IApplicationDbContext</code></td></tr>
+            <tr><td><strong>Infrastructure</strong></td><td>The "how" — technical details</td><td><code>AppDbContext</code>, Redis publisher, <code>DashboardStatsService</code>, JWT, <code>OrderHub</code>, <code>OrderEventWorker</code></td></tr>
+            <tr><td><strong>API</strong></td><td>Entry point</td><td><code>OrdersController</code>, <code>Program.cs</code>, middleware</td></tr>
+        </table>
+    </div>
+
+    <!-- The flow -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>The Request → Real-Time Flow ⭐</h2>
+        <p>This is the <strong>most important thing to understand</strong>. What happens when an order is placed:</p>
+        <div class="flow-diagram">
+            <strong>1.</strong> Browser → <code>POST /api/orders</code> → OrdersController<br>
+            <strong>2.</strong> Controller → <code>OrderService.PlaceOrderAsync()</code>:<br>
+            &nbsp;&nbsp;&nbsp;• validates stock&nbsp;&nbsp;• creates Order + Items (price snapshots)<br>
+            &nbsp;&nbsp;&nbsp;• decrements stock&nbsp;&nbsp;• saves to DB&nbsp;&nbsp;• refreshes Redis stats cache<br>
+            &nbsp;&nbsp;&nbsp;• <span class="highlight">PUBLISHES an event to the Redis "order-events" channel</span><br>
+            <strong>3.</strong> Controller returns <code>201 Created</code> — the HTTP request is now DONE<br>
+            ─────────── everything below runs off the request thread ───────────<br>
+            <strong>4.</strong> <code>OrderEventWorker</code> (background service) is SUBSCRIBED to "order-events":<br>
+            &nbsp;&nbsp;&nbsp;• receives & deserializes the event<br>
+            &nbsp;&nbsp;&nbsp;• calls <code>IHubContext</code> to BROADCAST <code>NewOrderPlaced</code> + <code>StatsUpdated</code><br>
+            <strong>5.</strong> SignalR pushes to EVERY connected browser<br>
+            <strong>6.</strong> React's <code>connection.on(...)</code> handlers fire → UI re-renders
+        </div>
+        <div class="key-takeaway">The controller <span class="highlight">never talks to SignalR directly</span>. It saves the order and drops a message in Redis. A separate worker does the broadcasting.</div>
+    </div>
+
+    <!-- SignalR events -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>The SignalR Events</h2>
+        <p>The hub is <strong>push-only</strong> — clients connect and listen, they never call server methods.</p>
+        <table>
+            <tr><th>Event</th><th>When</th><th>Payload</th></tr>
+            <tr><td><code>InitialStats</code></td><td>A client connects</td><td>Full dashboard snapshot</td></tr>
+            <tr><td><code>NewOrderPlaced</code></td><td>An order is created</td><td>The new order summary</td></tr>
+            <tr><td><code>OrderStatusChanged</code></td><td>Status changes</td><td>Old + new status</td></tr>
+            <tr><td><code>StatsUpdated</code></td><td>Any order change</td><td>Refreshed numbers</td></tr>
+            <tr><td><code>LowStockAlert</code></td><td>Stock drops below 5</td><td>Product + current stock</td></tr>
+        </table>
+        <p>On the React side, <code>useSignalR</code> opens the connection and <code>App.tsx</code> registers a <code>connection.on('EventName', ...)</code> handler for each, updating React state.</p>
+    </div>
+
+    <!-- Auth -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>How Authentication Works</h2>
+        <ol>
+            <li><code>POST /api/auth/login</code> with email + password.</li>
+            <li>The API checks the password (ASP.NET Core Identity) and returns a <strong>JWT access token</strong> + a <strong>refresh token</strong>.</li>
+            <li>The browser sends the token as <code>Authorization: Bearer &lt;token&gt;</code> on every call.</li>
+            <li><code>[Authorize]</code> rejects requests without a valid token; <code>[Authorize(Roles="Admin")]</code> requires the admin role.</li>
+        </ol>
+        <div class="concept-box">
+            <strong>Special case for SignalR:</strong> a WebSocket handshake can't send an <code>Authorization</code> header, so the client passes the token as <code>?access_token=...</code> and the server reads it from the query string for hub connections.
+        </div>
+    </div>
+
+    <!-- Redis roles -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>The Roles of Redis</h2>
+        <pre>1. CACHE      key "dashboard:stats"
+              → JSON of the current dashboard numbers
+              → a new client gets data instantly, no DB query
+
+2. PUB/SUB    channel "order-events"
+              → the API publishes, the worker subscribes
+              → the message bus that triggers broadcasts
+
+3. COUNTER    key "dashboard:active-connections"
+              → live count of connected clients</pre>
+        <h3>What the background worker is</h3>
+        <p><code>OrderEventWorker</code> is a <code>BackgroundService</code> (an <code>IHostedService</code>). It starts when the app boots and runs independently of any HTTP request. Its whole job: subscribe to the Redis channel and broadcast each message via SignalR.</p>
+    </div>
+
+    <!-- Frontend + testing -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>Frontend & Testing</h2>
+        <div class="two-column">
+            <div class="column">
+                <h4>Frontend structure</h4>
+                <ul>
+                    <li><code>useSignalR.ts</code> — builds the connection, auto-reconnect, exposes <code>{connection, isConnected}</code></li>
+                    <li><code>App.tsx</code> — holds state, wires up all listeners</li>
+                    <li>Components: StatsCards, OrderList, StatusBadge, ConnectionIndicator, LowStockToast, Login, PlaceOrderPanel</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>How it's tested</h4>
+                <ul>
+                    <li><strong>Unit tests</strong>: <code>OrderService</code> & <code>OrderEventWorker</code> with Moq + in-memory EF</li>
+                    <li><strong>Integration tests</strong>: whole API in memory (<code>WebApplicationFactory</code>), in-memory DB, mocked Redis, real HTTP calls</li>
+                    <li>12 tests total, all passing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview 1 -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>🎤 Interview Questions</h2>
+        <div class="interview"><div class="q">Q: Walk me through what happens when an order is placed.</div><div class="a">The controller calls OrderService, which validates stock, saves the order via EF Core, refreshes the cached stats, and publishes an event to a Redis channel — then returns 201. Separately, a background worker subscribed to that channel receives the event and broadcasts it to all connected clients over SignalR.</div></div>
+        <div class="interview"><div class="q">Q: Why four layers?</div><div class="a">Clean Architecture. Domain holds entities, Application holds logic + interfaces, Infrastructure holds technical implementations, API is the entry point. Dependencies point inward, so business logic doesn't depend on frameworks — testable and swappable.</div></div>
+        <div class="interview"><div class="q">Q: How does React receive live updates?</div><div class="a">It opens a SignalR connection via the useSignalR hook and registers handlers like <code>connection.on('NewOrderPlaced', ...)</code>. When the server broadcasts, the handler fires and updates React state, re-rendering the UI.</div></div>
+    </div>
+
+    <!-- Interview 2 -->
+    <div class="slide">
+        <span class="level-pill">MEDIUM</span>
+        <h2>🎤 Interview Questions (cont.)</h2>
+        <div class="interview"><div class="q">Q: How do you authenticate SignalR if WebSockets can't send headers?</div><div class="a">The client passes the JWT as a query string <code>access_token</code>, and the bearer middleware is configured to read it from the query string for the hub path.</div></div>
+        <div class="interview"><div class="q">Q: Why DTOs instead of sending entities?</div><div class="a">DTOs are flat shapes for the wire. Sending entities leaks internal fields, risks circular references (Order → Items → Order), and couples the API contract to the DB schema. DTOs give a stable, intentional contract.</div></div>
+        <div class="interview"><div class="q">Q: What does IHubContext do?</div><div class="a">It lets code outside a hub — like the background worker — send messages to connected clients. <code>IHubContext&lt;OrderHub&gt;</code> is how other services broadcast.</div></div>
+        <div class="key-takeaway">Next up → <strong>03-hard.html</strong>: defend every design decision.</div>
+    </div>
+
+</div>
+<script>
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp') window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

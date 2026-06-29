@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning .NET Framework - LIFE from Gjirafa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            width: 100px;
+            height: 31px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.08;
+            z-index: 0;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #4856F6 0%, #3640c4 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5em;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .session-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #4856F6;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 4px solid #EC8423;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            color: #212121;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #78909C;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .concept-box {
+            background: #f5f5f5;
+            border-left: 5px solid #4856F6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .concept-box strong {
+            color: #4856F6;
+            font-size: 1.3em;
+        }
+
+        .highlight {
+            background: #fff3e0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #EC8423;
+        }
+
+        code {
+            background: #263238;
+            color: #aed581;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        ul, ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .architecture-diagram {
+            background: white;
+            border: 2px solid #673ab7;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .layer {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 5px solid #512da8;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .practical-note {
+            background: #e8f5e9;
+            border: 2px dashed #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .practical-note::before {
+            content: "💡 Practical Exercise: ";
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 1.2em;
+        }
+
+        .key-takeaway {
+            background: #fff3e0;
+            border-left: 5px solid #EC8423;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        .key-takeaway::before {
+            content: "🎯 Key Takeaway: ";
+            font-weight: bold;
+            color: #EC8423;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .slide-number img {
+            height: 40px;
+            width: auto;
+        }
+
+        @media print {
+            .navigation { display: none; }
+            .slide { page-break-after: always; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4856F6;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- SESSION 1: INTRODUCTION & FUNDAMENTALS -->
+        
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <div style="margin-bottom: 40px;">
+                <img src="https://life.gjirafa.com/_nuxt/img/logo.6c28d16.svg" alt="LIFE Logo" style="height: 50px; opacity: 0.95;">
+            </div>
+            <h1>Learning a Framework: .NET</h1>
+            <div class="subtitle">A Comprehensive Guide to Modern .NET Development</div>
+            <div class="session-badge">4 Sessions | 90 Minutes Each | Theory + Practice</div>
+            <p style="margin-top: 40px; font-size: 1.1em; opacity: 0.95;">MSc. Albion Berisha<br/>Senior Software Engineer</p>
+        </div>
+
+        <!-- Slide 2: Course Overview -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Course Overview</h2>
+            
+            <h3>What We'll Cover:</h3>
+            <div class="two-column">
+                <div class="column">
+                    <h4>Session 1: Fundamentals</h4>
+                    <ul>
+                        <li>What is a Framework?</li>
+                        <li>.NET Ecosystem Overview</li>
+                        <li>CLR & Runtime Basics</li>
+                        <li>First .NET Application</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h4>Session 2: Architecture</h4>
+                    <ul>
+                        <li>Project Structure</li>
+                        <li>Dependency Injection</li>
+                        <li>Configuration & Logging</li>
+                        <li>Building APIs</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="two-column">
+                <div class="column">
+                    <h4>Session 3: Development</h4>
+                    <ul>
+                        <li>Working with Data</li>
+                        <li>Entity Framework Core</li>
+                        <li>Middleware Pipeline</li>
+                        <li>Background Services</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h4>Session 4: Advanced Topics</h4>
+                    <ul>
+                        <li>Testing Strategies</li>
+                        <li>Performance & Optimization</li>
+                        <li>Deployment</li>
+                        <li>Best Practices</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: What is a Framework? -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>What is a Framework?</h2>
+            
+            <div class="concept-box">
+                <strong>Definition:</strong> A framework is a pre-built foundation that provides structure, tools, and conventions for building applications efficiently.
+            </div>
+            
+            <h3>Framework vs Library</h3>
+            <div class="two-column">
+                <div class="column">
+                    <h4>📚 Library</h4>
+                    <p><strong>You are in control</strong></p>
+                    <ul>
+                        <li>You call the library code</li>
+                        <li>Use specific functions as needed</li>
+                        <li>Example: Math library, JSON parser</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h4>🏗️ Framework</h4>
+                    <p><strong>Framework is in control</strong></p>
+                    <ul>
+                        <li>Framework calls your code</li>
+                        <li>Provides application structure</li>
+                        <li>Example: ASP.NET Core, Django</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="key-takeaway">
+                Frameworks follow the <span class="highlight">Inversion of Control (IoC)</span> principle: "Don't call us, we'll call you."
+            </div>
+        </div>
+
+        <!-- Slide 4: Why Use a Framework? -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Why Use a Framework?</h2>
+            
+            <h3>Benefits:</h3>
+            <ul>
+                <li><strong>Faster Development:</strong> Pre-built components and patterns save time</li>
+                <li><strong>Best Practices:</strong> Built-in security, performance, and architectural patterns</li>
+                <li><strong>Community Support:</strong> Large ecosystem of packages and resources</li>
+                <li><strong>Maintainability:</strong> Standardized structure makes code easier to maintain</li>
+                <li><strong>Cross-Platform:</strong> Modern frameworks support multiple operating systems</li>
+                <li><strong>Testing Support:</strong> Built-in testing frameworks and patterns</li>
+            </ul>
+            
+            <div class="concept-box">
+                <strong>Real-World Analogy:</strong> Building with a framework is like building a house with pre-fabricated walls and a foundation, rather than starting from raw materials.
+            </div>
+        </div>
+
+        <!-- Slide 5: .NET Ecosystem Overview -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>The .NET Ecosystem</h2>
+            
+            <h3>What is .NET?</h3>
+            <p>.NET is a <span class="highlight">free, open-source, cross-platform</span> framework for building modern applications.</p>
+            
+            <h3>Evolution of .NET:</h3>
+            <table>
+                <tr>
+                    <th>Version</th>
+                    <th>Year</th>
+                    <th>Key Features</th>
+                </tr>
+                <tr>
+                    <td>.NET Framework</td>
+                    <td>2002</td>
+                    <td>Windows-only, mature ecosystem</td>
+                </tr>
+                <tr>
+                    <td>.NET Core</td>
+                    <td>2016</td>
+                    <td>Cross-platform, modular, high-performance</td>
+                </tr>
+                <tr>
+                    <td>.NET 5+</td>
+                    <td>2020+</td>
+                    <td>Unified platform (merged Core and Framework)</td>
+                </tr>
+                <tr>
+                    <td>.NET 8</td>
+                    <td>2023</td>
+                    <td>Current LTS, improved performance, modern features</td>
+                </tr>
+            </table>
+            
+            <div class="key-takeaway">
+                We'll focus on modern <span class="highlight">.NET 6+</span> (the unified platform), which is cross-platform and actively developed.
+            </div>
+        </div>
+
+        <!-- Slide 6: .NET Components -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>.NET Core Components</h2>
+            
+            <div class="architecture-diagram">
+                <h3 style="color: #512da8; margin-bottom: 20px;">The .NET Stack</h3>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);">
+                    Application Types: Web, Mobile, Desktop, Cloud, IoT
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
+                    Frameworks: ASP.NET Core, Entity Framework, Blazor, MAUI
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);">
+                    Languages: C#, F#, Visual Basic
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);">
+                    Runtime: CLR (Common Language Runtime)
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%);">
+                    Base Class Libraries (BCL)
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: CLR - Common Language Runtime -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>CLR: Common Language Runtime</h2>
+            
+            <h3>What is the CLR?</h3>
+            <p>The CLR is the <span class="highlight">execution engine</span> for .NET applications. It manages code execution and provides services.</p>
+            
+            <h3>Key Responsibilities:</h3>
+            <ul>
+                <li><strong>Memory Management:</strong> Automatic garbage collection</li>
+                <li><strong>Type Safety:</strong> Ensures type correctness at runtime</li>
+                <li><strong>Exception Handling:</strong> Structured error handling</li>
+                <li><strong>Security:</strong> Code access security and verification</li>
+                <li><strong>JIT Compilation:</strong> Converts IL to native code</li>
+            </ul>
+            
+            <div class="concept-box">
+                <strong>How it works:</strong>
+                <ol>
+                    <li>C# code is compiled to <code>Intermediate Language (IL)</code></li>
+                    <li>IL is stored in assemblies (.dll or .exe files)</li>
+                    <li>At runtime, JIT compiler converts IL to native machine code</li>
+                    <li>Native code is executed by the processor</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Slide 8: C# Language Basics -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>C# Language Essentials</h2>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li><strong>Object-Oriented:</strong> Classes, inheritance, polymorphism</li>
+                <li><strong>Type-Safe:</strong> Strong typing with compile-time checking</li>
+                <li><strong>Modern Syntax:</strong> LINQ, async/await, pattern matching</li>
+                <li><strong>Garbage Collected:</strong> Automatic memory management</li>
+            </ul>
+            
+            <h3>Simple C# Example:</h3>
+            <pre><code>// Program.cs
+using System;
+
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, .NET!");
+            
+            var name = "Student";
+            var greeting = $"Welcome, {name}!";
+            Console.WriteLine(greeting);
+        }
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 9: Your First .NET Application -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Creating Your First .NET App</h2>
+            
+            <h3>Prerequisites:</h3>
+            <ul>
+                <li>Install .NET SDK from <code>dotnet.microsoft.com</code></li>
+                <li>IDE: Visual Studio, VS Code, or Rider</li>
+            </ul>
+            
+            <h3>CLI Commands:</h3>
+            <pre><code># Create a new console application
+dotnet new console -n MyFirstApp
+
+# Navigate to the project
+cd MyFirstApp
+
+# Run the application
+dotnet run
+
+# Build the application
+dotnet build
+
+# Publish for deployment
+dotnet publish -c Release</code></pre>
+            
+            <div class="practical-note">
+                Create a console app that takes user input and performs a simple calculation (e.g., temperature converter, grade calculator).
+            </div>
+        </div>
+
+        <!-- SESSION 2: ARCHITECTURE & PATTERNS -->
+        
+        <!-- Slide 10: Session 2 Title -->
+        <div class="slide title-slide">
+            <h1>Session 2</h1>
+            <div class="subtitle">Architecture & Design Patterns</div>
+            <div class="session-badge">ASP.NET Core | Dependency Injection | APIs</div>
+            <p style="margin-top: 50px; font-size: 1.3em; font-weight: 600;">MSc. Albion Berisha</p>
+            <p style="font-size: 1.1em; opacity: 0.9; margin-top: 10px;">Senior Software Engineer</p>
+        </div>
+
+        <!-- Slide 11: ASP.NET Core Introduction -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>ASP.NET Core Framework</h2>
+            
+            <h3>What is ASP.NET Core?</h3>
+            <p>A <span class="highlight">high-performance, cross-platform</span> framework for building modern web applications and APIs.</p>
+            
+            <h3>Types of Applications:</h3>
+            <div class="two-column">
+                <div class="column">
+                    <h4>Web APIs (RESTful)</h4>
+                    <ul>
+                        <li>Backend services</li>
+                        <li>Microservices</li>
+                        <li>Mobile backends</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h4>Web Applications</h4>
+                    <ul>
+                        <li>MVC (Model-View-Controller)</li>
+                        <li>Razor Pages</li>
+                        <li>Blazor (SPA)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Creating a Web API:</h3>
+            <pre><code>dotnet new webapi -n MyApi
+cd MyApi
+dotnet run</code></pre>
+        </div>
+
+        <!-- Slide 12: Project Structure -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>ASP.NET Core Project Structure</h2>
+            
+            <pre><code>MyApi/
+├── Controllers/         # API endpoints
+│   └── WeatherController.cs
+├── Models/             # Data models/DTOs
+│   └── WeatherForecast.cs
+├── Services/           # Business logic
+│   └── WeatherService.cs
+├── Program.cs          # Application entry point
+├── appsettings.json    # Configuration
+└── MyApi.csproj        # Project file</code></pre>
+            
+            <h3>Key Files:</h3>
+            <ul>
+                <li><code>Program.cs</code>: Configures services and middleware pipeline</li>
+                <li><code>appsettings.json</code>: Configuration settings (DB, logging, etc.)</li>
+                <li><code>Controllers/</code>: Handle HTTP requests and return responses</li>
+                <li><code>Models/</code>: Data structures and DTOs</li>
+            </ul>
+        </div>
+
+        <!-- Slide 13: Program.cs - The Heart -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Program.cs: Application Setup</h2>
+            
+            <h3>Modern Minimal API Structure (.NET 6+):</h3>
+            <pre><code>var builder = WebApplication.CreateBuilder(args);
+
+// 1. Configure Services (Dependency Injection)
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add your custom services
+builder.Services.AddScoped&lt;IWeatherService, WeatherService&gt;();
+
+// 2. Build the application
+var app = builder.Build();
+
+// 3. Configure Middleware Pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+// 4. Run the application
+app.Run();</code></pre>
+        </div>
+
+        <!-- Slide 14: Dependency Injection -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Dependency Injection (DI)</h2>
+            
+            <div class="concept-box">
+                <strong>What is DI?</strong> A design pattern where objects receive their dependencies from external sources rather than creating them internally.
+            </div>
+            
+            <h3>Why Use DI?</h3>
+            <ul>
+                <li><strong>Loose Coupling:</strong> Components don't depend on concrete implementations</li>
+                <li><strong>Testability:</strong> Easy to mock dependencies in unit tests</li>
+                <li><strong>Maintainability:</strong> Change implementations without modifying consumers</li>
+                <li><strong>Lifetime Management:</strong> Framework handles object creation and disposal</li>
+            </ul>
+            
+            <h3>Service Lifetimes:</h3>
+            <table>
+                <tr>
+                    <th>Lifetime</th>
+                    <th>Scope</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td><code>Transient</code></td>
+                    <td>New instance every time</td>
+                    <td>Lightweight, stateless services</td>
+                </tr>
+                <tr>
+                    <td><code>Scoped</code></td>
+                    <td>One instance per request</td>
+                    <td>Database contexts, request-specific data</td>
+                </tr>
+                <tr>
+                    <td><code>Singleton</code></td>
+                    <td>One instance for app lifetime</td>
+                    <td>Configuration, caching, logging</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Slide 15: DI Example -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Dependency Injection in Action</h2>
+            
+            <h3>1. Define an Interface:</h3>
+            <pre><code>public interface IWeatherService
+{
+    Task&lt;List&lt;WeatherForecast&gt;&gt; GetForecastAsync();
+}</code></pre>
+            
+            <h3>2. Implement the Service:</h3>
+            <pre><code>public class WeatherService : IWeatherService
+{
+    private readonly ILogger&lt;WeatherService&gt; _logger;
+    
+    public WeatherService(ILogger&lt;WeatherService&gt; logger)
+    {
+        _logger = logger;
+    }
+    
+    public async Task&lt;List&lt;WeatherForecast&gt;&gt; GetForecastAsync()
+    {
+        _logger.LogInformation("Fetching weather forecast");
+        // Implementation
+        return await Task.FromResult(new List&lt;WeatherForecast&gt;());
+    }
+}</code></pre>
+            
+            <h3>3. Register in Program.cs:</h3>
+            <pre><code>builder.Services.AddScoped&lt;IWeatherService, WeatherService&gt;();</code></pre>
+            
+            <h3>4. Inject into Controller:</h3>
+            <pre><code>[ApiController]
+[Route("[controller]")]
+public class WeatherController : ControllerBase
+{
+    private readonly IWeatherService _weatherService;
+    
+    public WeatherController(IWeatherService weatherService)
+    {
+        _weatherService = weatherService;
+    }
+    
+    [HttpGet]
+    public async Task&lt;IActionResult&gt; Get()
+    {
+        var forecast = await _weatherService.GetForecastAsync();
+        return Ok(forecast);
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 16: Configuration -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Configuration Management</h2>
+            
+            <h3>appsettings.json:</h3>
+            <pre><code>{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=MyDb;..."
+  },
+  "AppSettings": {
+    "MaxItemsPerPage": 50,
+    "EnableFeatureX": true
+  }
+}</code></pre>
+            
+            <h3>Reading Configuration:</h3>
+            <pre><code>// In Program.cs
+var connectionString = builder.Configuration
+    .GetConnectionString("DefaultConnection");
+
+// Strongly-typed configuration
+builder.Services.Configure&lt;AppSettings&gt;(
+    builder.Configuration.GetSection("AppSettings"));
+
+// In a service
+public class MyService
+{
+    private readonly AppSettings _settings;
+    
+    public MyService(IOptions&lt;AppSettings&gt; options)
+    {
+        _settings = options.Value;
+    }
+}</code></pre>
+            
+            <div class="key-takeaway">
+                Use <span class="highlight">environment-specific</span> files: appsettings.Development.json, appsettings.Production.json
+            </div>
+        </div>
+
+        <!-- Slide 17: Building REST APIs -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Building RESTful APIs</h2>
+            
+            <h3>REST Principles:</h3>
+            <ul>
+                <li><strong>Resources:</strong> Everything is a resource (Users, Products, Orders)</li>
+                <li><strong>HTTP Methods:</strong> GET, POST, PUT, DELETE</li>
+                <li><strong>Stateless:</strong> Each request contains all necessary information</li>
+                <li><strong>Standard Status Codes:</strong> 200, 201, 400, 404, 500, etc.</li>
+            </ul>
+            
+            <h3>Complete CRUD Controller:</h3>
+            <pre><code>[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly IProductService _productService;
+    
+    public ProductsController(IProductService productService)
+    {
+        _productService = productService;
+    }
+    
+    [HttpGet]
+    public async Task&lt;ActionResult&lt;List&lt;Product&gt;&gt;&gt; GetAll()
+    {
+        var products = await _productService.GetAllAsync();
+        return Ok(products);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task&lt;ActionResult&lt;Product&gt;&gt; GetById(int id)
+    {
+        var product = await _productService.GetByIdAsync(id);
+        if (product == null)
+            return NotFound();
+        return Ok(product);
+    }
+    
+    [HttpPost]
+    public async Task&lt;ActionResult&lt;Product&gt;&gt; Create(Product product)
+    {
+        var created = await _productService.CreateAsync(product);
+        return CreatedAtAction(nameof(GetById), 
+            new { id = created.Id }, created);
+    }
+    
+    [HttpPut("{id}")]
+    public async Task&lt;IActionResult&gt; Update(int id, Product product)
+    {
+        if (id != product.Id)
+            return BadRequest();
+            
+        await _productService.UpdateAsync(product);
+        return NoContent();
+    }
+    
+    [HttpDelete("{id}")]
+    public async Task&lt;IActionResult&gt; Delete(int id)
+    {
+        await _productService.DeleteAsync(id);
+        return NoContent();
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 18: Practical Exercise Session 2 -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Session 2: Practical Exercise</h2>
+            
+            <div class="practical-note">
+                Build a simple Task Management API with the following features:
+                
+                <h4>Requirements:</h4>
+                <ul>
+                    <li>Create a <code>Task</code> model with: Id, Title, Description, IsCompleted, CreatedAt</li>
+                    <li>Implement <code>ITaskService</code> interface and <code>TaskService</code> class</li>
+                    <li>Use in-memory list for storage (we'll add database next session)</li>
+                    <li>Create <code>TasksController</code> with all CRUD operations</li>
+                    <li>Register service with DI in Program.cs</li>
+                    <li>Test with Swagger UI</li>
+                </ul>
+                
+                <h4>Bonus Challenges:</h4>
+                <ul>
+                    <li>Add input validation using Data Annotations</li>
+                    <li>Implement search/filter functionality</li>
+                    <li>Add logging to your service</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SESSION 3: DATA & MIDDLEWARE -->
+        
+        <!-- Slide 19: Session 3 Title -->
+        <div class="slide title-slide">
+            <h1>Session 3</h1>
+            <div class="subtitle">Working with Data & Middleware</div>
+            <div class="session-badge">Entity Framework Core | Database | Background Services</div>
+            <p style="margin-top: 50px; font-size: 1.3em; font-weight: 600;">MSc. Albion Berisha</p>
+            <p style="font-size: 1.1em; opacity: 0.9; margin-top: 10px;">Senior Software Engineer</p>
+        </div>
+
+        <!-- Slide 20: Entity Framework Core -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Entity Framework Core</h2>
+            
+            <div class="concept-box">
+                <strong>What is EF Core?</strong> An Object-Relational Mapper (ORM) that allows you to work with databases using .NET objects.
+            </div>
+            
+            <h3>Benefits:</h3>
+            <ul>
+                <li><strong>Type-Safe Queries:</strong> Write queries in C# using LINQ</li>
+                <li><strong>Database Agnostic:</strong> Works with SQL Server, PostgreSQL, SQLite, etc.</li>
+                <li><strong>Migrations:</strong> Version control for your database schema</li>
+                <li><strong>Change Tracking:</strong> Automatically detects and saves changes</li>
+                <li><strong>Relationships:</strong> Handles foreign keys and navigation properties</li>
+            </ul>
+            
+            <h3>Installation:</h3>
+            <pre><code>dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+dotnet add package Microsoft.EntityFrameworkCore.Tools</code></pre>
+        </div>
+
+        <!-- Slide 21: DbContext -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>DbContext: Your Database Gateway</h2>
+            
+            <h3>Creating a DbContext:</h3>
+            <pre><code>public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options)
+        : base(options)
+    {
+    }
+    
+    // Define your tables
+    public DbSet&lt;Product&gt; Products { get; set; }
+    public DbSet&lt;Category&gt; Categories { get; set; }
+    public DbSet&lt;Order&gt; Orders { get; set; }
+    
+    // Configure relationships and constraints
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity&lt;Product&gt;()
+            .HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId);
+            
+        modelBuilder.Entity&lt;Product&gt;()
+            .Property(p => p.Price)
+            .HasPrecision(18, 2);
+            
+        base.OnModelCreating(modelBuilder);
+    }
+}</code></pre>
+            
+            <h3>Register in Program.cs:</h3>
+            <pre><code>builder.Services.AddDbContext&lt;AppDbContext&gt;(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));</code></pre>
+        </div>
+
+        <!-- Slide 22: Entity Models -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Defining Entity Models</h2>
+            
+            <h3>Example Entities:</h3>
+            <pre><code>public class Product
+{
+    public int Id { get; set; }
+    
+    [Required]
+    [MaxLength(100)]
+    public string Name { get; set; }
+    
+    [MaxLength(500)]
+    public string Description { get; set; }
+    
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal Price { get; set; }
+    
+    public int CategoryId { get; set; }
+    public Category Category { get; set; }  // Navigation property
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+}
+
+public class Category
+{
+    public int Id { get; set; }
+    
+    [Required]
+    [MaxLength(50)]
+    public string Name { get; set; }
+    
+    public List&lt;Product&gt; Products { get; set; }  // Collection navigation
+}</code></pre>
+            
+            <div class="key-takeaway">
+                Use <span class="highlight">Data Annotations</span> or <span class="highlight">Fluent API</span> to configure your entities.
+            </div>
+        </div>
+
+        <!-- Slide 23: Migrations -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Database Migrations</h2>
+            
+            <h3>What are Migrations?</h3>
+            <p>Migrations are a way to <span class="highlight">version control your database schema</span> and keep it in sync with your entity models.</p>
+            
+            <h3>Common Migration Commands:</h3>
+            <pre><code># Create a new migration
+dotnet ef migrations add InitialCreate
+
+# Update database to latest migration
+dotnet ef database update
+
+# Remove last migration (if not applied)
+dotnet ef migrations remove
+
+# View migration SQL
+dotnet ef migrations script
+
+# Drop database
+dotnet ef database drop</code></pre>
+            
+            <h3>Migration Workflow:</h3>
+            <ol>
+                <li>Modify your entity models</li>
+                <li>Run <code>dotnet ef migrations add [MigrationName]</code></li>
+                <li>Review generated migration code</li>
+                <li>Run <code>dotnet ef database update</code></li>
+            </ol>
+        </div>
+
+        <!-- Slide 24: CRUD with EF Core -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>CRUD Operations with EF Core</h2>
+            
+            <pre><code>public class ProductService : IProductService
+{
+    private readonly AppDbContext _context;
+    private readonly ILogger&lt;ProductService&gt; _logger;
+    
+    public ProductService(AppDbContext context, 
+                         ILogger&lt;ProductService&gt; logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+    
+    // READ
+    public async Task&lt;List&lt;Product&gt;&gt; GetAllAsync()
+    {
+        return await _context.Products
+            .Include(p => p.Category)  // Eager loading
+            .ToListAsync();
+    }
+    
+    public async Task&lt;Product&gt; GetByIdAsync(int id)
+    {
+        return await _context.Products
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
+    
+    // CREATE
+    public async Task&lt;Product&gt; CreateAsync(Product product)
+    {
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+        return product;
+    }
+    
+    // UPDATE
+    public async Task UpdateAsync(Product product)
+    {
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+    }
+    
+    // DELETE
+    public async Task DeleteAsync(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product != null)
+        {
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
+    }
+    
+    // LINQ Queries
+    public async Task&lt;List&lt;Product&gt;&gt; SearchAsync(string searchTerm)
+    {
+        return await _context.Products
+            .Where(p => p.Name.Contains(searchTerm) || 
+                       p.Description.Contains(searchTerm))
+            .OrderBy(p => p.Name)
+            .Take(20)
+            .ToListAsync();
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 25: Middleware Pipeline -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Middleware Pipeline</h2>
+            
+            <div class="concept-box">
+                <strong>What is Middleware?</strong> Software components that form a pipeline to handle HTTP requests and responses.
+            </div>
+            
+            <h3>Request Pipeline Flow:</h3>
+            <pre><code>Request → Middleware 1 → Middleware 2 → Middleware 3 → Endpoint
+                ↓            ↓            ↓
+Response ← Middleware 1 ← Middleware 2 ← Middleware 3 ← Endpoint</code></pre>
+            
+            <h3>Common Middleware in Order:</h3>
+            <pre><code>var app = builder.Build();
+
+app.UseExceptionHandler("/Error");  // 1. Error handling
+app.UseHsts();                      // 2. HTTP Strict Transport
+app.UseHttpsRedirection();          // 3. HTTPS redirect
+
+app.UseStaticFiles();               // 4. Static files (CSS, JS)
+app.UseRouting();                   // 5. Route matching
+
+app.UseAuthentication();            // 6. Who are you?
+app.UseAuthorization();             // 7. What can you do?
+
+app.MapControllers();               // 8. Execute endpoint
+app.Run();</code></pre>
+            
+            <div class="key-takeaway">
+                <strong>Order matters!</strong> Middleware executes in the order it's added.
+            </div>
+        </div>
+
+        <!-- Slide 26: Custom Middleware -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Creating Custom Middleware</h2>
+            
+            <h3>Example: Request Logging Middleware</h3>
+            <pre><code>public class RequestLoggingMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger&lt;RequestLoggingMiddleware&gt; _logger;
+    
+    public RequestLoggingMiddleware(RequestDelegate next, 
+                                   ILogger&lt;RequestLoggingMiddleware&gt; logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+    
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var requestTime = DateTime.UtcNow;
+        
+        _logger.LogInformation(
+            "Incoming request: {Method} {Path}",
+            context.Request.Method,
+            context.Request.Path);
+        
+        // Call next middleware in pipeline
+        await _next(context);
+        
+        var elapsed = DateTime.UtcNow - requestTime;
+        _logger.LogInformation(
+            "Request completed: {StatusCode} in {ElapsedMs}ms",
+            context.Response.StatusCode,
+            elapsed.TotalMilliseconds);
+    }
+}
+
+// Extension method for easy registration
+public static class RequestLoggingMiddlewareExtensions
+{
+    public static IApplicationBuilder UseRequestLogging(
+        this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware&lt;RequestLoggingMiddleware&gt;();
+    }
+}
+
+// In Program.cs
+app.UseRequestLogging();</code></pre>
+        </div>
+
+        <!-- Slide 27: Background Services -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Background Services</h2>
+            
+            <div class="concept-box">
+                <strong>What are Background Services?</strong> Long-running tasks that execute independently of HTTP requests (scheduled jobs, cleanup tasks, etc.).
+            </div>
+            
+            <h3>Creating a Background Service:</h3>
+            <pre><code>public class DataCleanupService : BackgroundService
+{
+    private readonly ILogger&lt;DataCleanupService&gt; _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
+    
+    public DataCleanupService(
+        ILogger&lt;DataCleanupService&gt; logger,
+        IServiceScopeFactory scopeFactory)
+    {
+        _logger = logger;
+        _scopeFactory = scopeFactory;
+    }
+    
+    protected override async Task ExecuteAsync(
+        CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("Data Cleanup Service started");
+        
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                await DoWorkAsync();
+                
+                // Run every hour
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in cleanup service");
+            }
+        }
+    }
+    
+    private async Task DoWorkAsync()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider
+            .GetRequiredService&lt;AppDbContext&gt;();
+        
+        var twoWeeksAgo = DateTime.UtcNow.AddDays(-14);
+        var expiredRecords = await dbContext.Products
+            .Where(p => p.CreatedAt < twoWeeksAgo && p.IsDeleted)
+            .ToListAsync();
+        
+        dbContext.Products.RemoveRange(expiredRecords);
+        await dbContext.SaveChangesAsync();
+        
+        _logger.LogInformation(
+            "Cleaned up {Count} expired records", 
+            expiredRecords.Count);
+    }
+}
+
+// Register in Program.cs
+builder.Services.AddHostedService&lt;DataCleanupService&gt;();</code></pre>
+        </div>
+
+        <!-- SESSION 4: TESTING & DEPLOYMENT -->
+        
+        <!-- Slide 28: Session 4 Title -->
+        <div class="slide title-slide">
+            <h1>Session 4</h1>
+            <div class="subtitle">Testing, Performance & Best Practices</div>
+            <div class="session-badge">Unit Testing | Integration Testing | Production Ready</div>
+            <p style="margin-top: 50px; font-size: 1.3em; font-weight: 600;">MSc. Albion Berisha</p>
+            <p style="font-size: 1.1em; opacity: 0.9; margin-top: 10px;">Senior Software Engineer</p>
+        </div>
+
+        <!-- Slide 29: Testing Introduction -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Testing in .NET</h2>
+            
+            <h3>Types of Tests:</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Scope</th>
+                    <th>Speed</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td>Unit Tests</td>
+                    <td>Single method/class</td>
+                    <td>Very Fast</td>
+                    <td>Test business logic in isolation</td>
+                </tr>
+                <tr>
+                    <td>Integration Tests</td>
+                    <td>Multiple components</td>
+                    <td>Medium</td>
+                    <td>Test component interactions</td>
+                </tr>
+                <tr>
+                    <td>End-to-End Tests</td>
+                    <td>Full application</td>
+                    <td>Slow</td>
+                    <td>Test complete user workflows</td>
+                </tr>
+            </table>
+            
+            <h3>Testing Frameworks:</h3>
+            <ul>
+                <li><strong>xUnit:</strong> Most popular, modern framework</li>
+                <li><strong>NUnit:</strong> Traditional, feature-rich</li>
+                <li><strong>MSTest:</strong> Microsoft's framework</li>
+            </ul>
+            
+            <h3>Setup Test Project:</h3>
+            <pre><code>dotnet new xunit -n MyApi.Tests
+dotnet add reference ../MyApi/MyApi.csproj
+dotnet add package Moq
+dotnet add package FluentAssertions</code></pre>
+        </div>
+
+        <!-- Slide 30: Unit Testing -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Unit Testing Example</h2>
+            
+            <h3>Service to Test:</h3>
+            <pre><code>public class CalculatorService
+{
+    public int Add(int a, int b) => a + b;
+    
+    public decimal CalculateDiscount(decimal price, decimal percentage)
+    {
+        if (percentage < 0 || percentage > 100)
+            throw new ArgumentException("Invalid percentage");
+            
+        return price * (percentage / 100);
+    }
+}</code></pre>
+            
+            <h3>Unit Tests:</h3>
+            <pre><code>public class CalculatorServiceTests
+{
+    private readonly CalculatorService _calculator;
+    
+    public CalculatorServiceTests()
+    {
+        _calculator = new CalculatorService();
+    }
+    
+    [Fact]
+    public void Add_TwoPositiveNumbers_ReturnsSum()
+    {
+        // Arrange
+        var a = 5;
+        var b = 3;
+        
+        // Act
+        var result = _calculator.Add(a, b);
+        
+        // Assert
+        Assert.Equal(8, result);
+    }
+    
+    [Theory]
+    [InlineData(100, 10, 10)]
+    [InlineData(200, 25, 50)]
+    [InlineData(50, 0, 0)]
+    public void CalculateDiscount_ValidInputs_ReturnsCorrectAmount(
+        decimal price, decimal percentage, decimal expected)
+    {
+        // Act
+        var result = _calculator.CalculateDiscount(price, percentage);
+        
+        // Assert
+        Assert.Equal(expected, result);
+    }
+    
+    [Fact]
+    public void CalculateDiscount_InvalidPercentage_ThrowsException()
+    {
+        // Arrange
+        var price = 100m;
+        var invalidPercentage = 150m;
+        
+        // Act & Assert
+        Assert.Throws&lt;ArgumentException&gt;(
+            () => _calculator.CalculateDiscount(price, invalidPercentage));
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 31: Mocking Dependencies -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Mocking with Moq</h2>
+            
+            <h3>Testing with Dependencies:</h3>
+            <pre><code>public class OrderServiceTests
+{
+    private readonly Mock&lt;IProductRepository&gt; _mockRepository;
+    private readonly Mock&lt;ILogger&lt;OrderService&gt;&gt; _mockLogger;
+    private readonly OrderService _orderService;
+    
+    public OrderServiceTests()
+    {
+        _mockRepository = new Mock&lt;IProductRepository&gt;();
+        _mockLogger = new Mock&lt;ILogger&lt;OrderService&gt;&gt;();
+        _orderService = new OrderService(
+            _mockRepository.Object, 
+            _mockLogger.Object);
+    }
+    
+    [Fact]
+    public async Task CreateOrder_ValidProduct_ReturnsOrder()
+    {
+        // Arrange
+        var productId = 1;
+        var product = new Product 
+        { 
+            Id = productId, 
+            Name = "Test Product", 
+            Price = 100 
+        };
+        
+        _mockRepository
+            .Setup(r => r.GetByIdAsync(productId))
+            .ReturnsAsync(product);
+        
+        // Act
+        var order = await _orderService.CreateOrderAsync(productId, 2);
+        
+        // Assert
+        Assert.NotNull(order);
+        Assert.Equal(200, order.TotalAmount);
+        
+        // Verify repository was called
+        _mockRepository.Verify(
+            r => r.GetByIdAsync(productId), 
+            Times.Once);
+    }
+    
+    [Fact]
+    public async Task CreateOrder_ProductNotFound_ThrowsException()
+    {
+        // Arrange
+        _mockRepository
+            .Setup(r => r.GetByIdAsync(It.IsAny&lt;int&gt;()))
+            .ReturnsAsync((Product)null);
+        
+        // Act & Assert
+        await Assert.ThrowsAsync&lt;NotFoundException&gt;(
+            () => _orderService.CreateOrderAsync(999, 1));
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 32: Integration Testing -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Integration Testing</h2>
+            
+            <h3>Testing API Endpoints:</h3>
+            <pre><code>public class ProductsControllerTests : IClassFixture&lt;WebApplicationFactory&lt;Program&gt;&gt;
+{
+    private readonly HttpClient _client;
+    
+    public ProductsControllerTests(WebApplicationFactory&lt;Program&gt; factory)
+    {
+        _client = factory.CreateClient();
+    }
+    
+    [Fact]
+    public async Task GetProducts_ReturnsSuccessStatusCode()
+    {
+        // Act
+        var response = await _client.GetAsync("/api/products");
+        
+        // Assert
+        response.EnsureSuccessStatusCode();
+        Assert.Equal("application/json", 
+            response.Content.Headers.ContentType.MediaType);
+    }
+    
+    [Fact]
+    public async Task CreateProduct_ValidData_ReturnsCreated()
+    {
+        // Arrange
+        var newProduct = new { Name = "Test Product", Price = 99.99 };
+        var content = new StringContent(
+            JsonSerializer.Serialize(newProduct),
+            Encoding.UTF8,
+            "application/json");
+        
+        // Act
+        var response = await _client.PostAsync("/api/products", content);
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+}</code></pre>
+        </div>
+
+        <!-- Slide 33: Performance & Optimization -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Performance Best Practices</h2>
+            
+            <h3>Database Optimization:</h3>
+            <ul>
+                <li><strong>Use AsNoTracking():</strong> For read-only queries</li>
+                <li><strong>Eager Loading:</strong> Use <code>Include()</code> to avoid N+1 queries</li>
+                <li><strong>Pagination:</strong> Always use <code>Skip()</code> and <code>Take()</code></li>
+                <li><strong>Projections:</strong> Select only needed columns</li>
+                <li><strong>Indexes:</strong> Add indexes on frequently queried columns</li>
+            </ul>
+            
+            <pre><code>// ❌ Bad: N+1 Query Problem
+var orders = await _context.Orders.ToListAsync();
+foreach (var order in orders)
+{
+    var customer = await _context.Customers
+        .FindAsync(order.CustomerId);  // N additional queries!
+}
+
+// ✅ Good: Eager Loading
+var orders = await _context.Orders
+    .Include(o => o.Customer)
+    .ToListAsync();
+
+// ✅ Good: AsNoTracking for read-only
+var products = await _context.Products
+    .AsNoTracking()
+    .Where(p => p.IsActive)
+    .ToListAsync();
+
+// ✅ Good: Pagination
+var products = await _context.Products
+    .OrderBy(p => p.Name)
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .ToListAsync();
+
+// ✅ Good: Select only needed data
+var productNames = await _context.Products
+    .Select(p => new { p.Id, p.Name })
+    .ToListAsync();</code></pre>
+        </div>
+
+        <!-- Slide 34: Caching -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Caching Strategies</h2>
+            
+            <h3>In-Memory Caching:</h3>
+            <pre><code>// Register in Program.cs
+builder.Services.AddMemoryCache();
+
+// Use in service
+public class ProductService
+{
+    private readonly IMemoryCache _cache;
+    private readonly AppDbContext _context;
+    
+    public ProductService(IMemoryCache cache, AppDbContext context)
+    {
+        _cache = cache;
+        _context = context;
+    }
+    
+    public async Task&lt;List&lt;Product&gt;&gt; GetFeaturedProductsAsync()
+    {
+        var cacheKey = "featured-products";
+        
+        if (!_cache.TryGetValue(cacheKey, out List&lt;Product&gt; products))
+        {
+            products = await _context.Products
+                .Where(p => p.IsFeatured)
+                .ToListAsync();
+            
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10))
+                .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+            
+            _cache.Set(cacheKey, products, cacheOptions);
+        }
+        
+        return products;
+    }
+}</code></pre>
+            
+            <h3>Response Caching:</h3>
+            <pre><code>// In Program.cs
+builder.Services.AddResponseCaching();
+app.UseResponseCaching();
+
+// In Controller
+[HttpGet]
+[ResponseCache(Duration = 60)]
+public async Task&lt;IActionResult&gt; GetAll()
+{
+    var products = await _productService.GetAllAsync();
+    return Ok(products);
+}</code></pre>
+        </div>
+
+        <!-- Slide 35: Error Handling -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Global Error Handling</h2>
+            
+            <h3>Exception Handling Middleware:</h3>
+            <pre><code>public class ErrorHandlingMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger&lt;ErrorHandlingMiddleware&gt; _logger;
+    
+    public ErrorHandlingMiddleware(
+        RequestDelegate next,
+        ILogger&lt;ErrorHandlingMiddleware&gt; logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+    
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unhandled exception occurred");
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+    
+    private static Task HandleExceptionAsync(
+        HttpContext context, 
+        Exception exception)
+    {
+        var statusCode = exception switch
+        {
+            NotFoundException => StatusCodes.Status404NotFound,
+            ValidationException => StatusCodes.Status400BadRequest,
+            UnauthorizedException => StatusCodes.Status401Unauthorized,
+            _ => StatusCodes.Status500InternalServerError
+        };
+        
+        var response = new
+        {
+            error = exception.Message,
+            statusCode = statusCode
+        };
+        
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = statusCode;
+        
+        return context.Response.WriteAsJsonAsync(response);
+    }
+}
+
+// Register in Program.cs
+app.UseMiddleware&lt;ErrorHandlingMiddleware&gt;();</code></pre>
+        </div>
+
+        <!-- Slide 36: Deployment -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Deployment & Production</h2>
+            
+            <h3>Publishing Your Application:</h3>
+            <pre><code># Publish for production
+dotnet publish -c Release -o ./publish
+
+# Self-contained (includes runtime)
+dotnet publish -c Release -r win-x64 --self-contained
+
+# For Linux
+dotnet publish -c Release -r linux-x64</code></pre>
+            
+            <h3>Environment-Specific Settings:</h3>
+            <pre><code>// appsettings.Production.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Production-Connection-String"
+  }
+}</code></pre>
+            
+            <h3>Hosting Options:</h3>
+            <ul>
+                <li><strong>Azure App Service:</strong> Managed PaaS hosting</li>
+                <li><strong>Docker:</strong> Containerized deployment</li>
+                <li><strong>IIS:</strong> Traditional Windows hosting</li>
+                <li><strong>Linux with Nginx:</strong> Self-hosted on Linux</li>
+                <li><strong>Kubernetes:</strong> Orchestrated containers</li>
+            </ul>
+        </div>
+
+        <!-- Slide 37: Best Practices Summary -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Best Practices Checklist</h2>
+            
+            <h3>Code Organization:</h3>
+            <ul>
+                <li>✅ Use dependency injection for loose coupling</li>
+                <li>✅ Separate concerns (Controllers, Services, Repositories)</li>
+                <li>✅ Use interfaces for abstraction</li>
+                <li>✅ Keep controllers thin, services focused</li>
+            </ul>
+            
+            <h3>Data & Performance:</h3>
+            <ul>
+                <li>✅ Use async/await for I/O operations</li>
+                <li>✅ Implement caching for expensive operations</li>
+                <li>✅ Use AsNoTracking() for read-only queries</li>
+                <li>✅ Always paginate large datasets</li>
+                <li>✅ Add database indexes strategically</li>
+            </ul>
+            
+            <h3>Security:</h3>
+            <ul>
+                <li>✅ Validate all user input</li>
+                <li>✅ Use HTTPS in production</li>
+                <li>✅ Store secrets in environment variables or Key Vault</li>
+                <li>✅ Implement authentication & authorization</li>
+                <li>✅ Sanitize error messages (don't leak sensitive info)</li>
+            </ul>
+            
+            <h3>Testing & Monitoring:</h3>
+            <ul>
+                <li>✅ Write unit tests for business logic</li>
+                <li>✅ Add integration tests for critical workflows</li>
+                <li>✅ Implement comprehensive logging</li>
+                <li>✅ Monitor application health and performance</li>
+                <li>✅ Use structured logging (Serilog, NLog)</li>
+            </ul>
+        </div>
+
+        <!-- Slide 38: Final Project -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Final Practical Project</h2>
+            
+            <div class="practical-note">
+                Build a complete <strong>E-Commerce API</strong> with:
+                
+                <h4>Core Features:</h4>
+                <ul>
+                    <li><strong>Products:</strong> CRUD operations with categories</li>
+                    <li><strong>Shopping Cart:</strong> Add/remove items, calculate total</li>
+                    <li><strong>Orders:</strong> Create orders from cart, order history</li>
+                    <li><strong>Users:</strong> Basic authentication (bonus)</li>
+                </ul>
+                
+                <h4>Technical Requirements:</h4>
+                <ul>
+                    <li>Use Entity Framework Core with SQL Server</li>
+                    <li>Implement proper relationships (1-to-many, many-to-many)</li>
+                    <li>Add input validation and error handling</li>
+                    <li>Include logging throughout</li>
+                    <li>Write unit tests for services (minimum 5 tests)</li>
+                    <li>Create API documentation with Swagger</li>
+                    <li>Implement caching for product catalog</li>
+                    <li>Add a background service to clean old carts</li>
+                </ul>
+                
+                <h4>Bonus Challenges:</h4>
+                <ul>
+                    <li>Add search and filtering for products</li>
+                    <li>Implement pagination for all list endpoints</li>
+                    <li>Add JWT authentication</li>
+                    <li>Create integration tests</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 39: Resources & Next Steps -->
+        <div class="slide">
+            <div class="slide-number"><img src="https://life.gjirafa.com/_nuxt/img/logoblack.90a8edf.svg" alt="LIFE Logo"></div>
+            <h2>Resources & Next Steps</h2>
+            
+            <h3>Official Documentation:</h3>
+            <ul>
+                <li>📚 <strong>docs.microsoft.com/dotnet</strong> - Official .NET docs</li>
+                <li>📚 <strong>docs.microsoft.com/aspnet</strong> - ASP.NET Core docs</li>
+                <li>📚 <strong>learn.microsoft.com</strong> - Free tutorials and courses</li>
+            </ul>
+            
+            <h3>Advanced Topics to Explore:</h3>
+            <ul>
+                <li><strong>Authentication & Authorization:</strong> JWT, OAuth, Identity</li>
+                <li><strong>Microservices:</strong> Distributed systems, message queues</li>
+                <li><strong>GraphQL:</strong> Alternative to REST APIs</li>
+                <li><strong>SignalR:</strong> Real-time web functionality</li>
+                <li><strong>Blazor:</strong> Build web UIs with C# instead of JavaScript</li>
+                <li><strong>gRPC:</strong> High-performance RPC framework</li>
+            </ul>
+            
+            <h3>Practice Resources:</h3>
+            <ul>
+                <li>🎯 Build real projects and deploy them</li>
+                <li>🎯 Contribute to open-source .NET projects</li>
+                <li>🎯 Follow .NET blogs and YouTube channels</li>
+                <li>🎯 Join .NET communities and forums</li>
+            </ul>
+            
+            <div class="key-takeaway">
+                The best way to learn is by <span class="highlight">building real applications</span>. Start small, iterate often, and gradually increase complexity!
+            </div>
+        </div>
+
+        <!-- Slide 40: Thank You -->
+        <div class="slide title-slide">
+            <h1>Thank You!</h1>
+            <div class="subtitle">Questions & Discussion</div>
+        </div>
+
+    </div>
+    
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

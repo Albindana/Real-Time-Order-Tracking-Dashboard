@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔴 Hard — Real-Time Order Tracking Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Arial', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: #333; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .slide { background: white; border-radius: 20px; padding: 60px; margin: 40px 0; box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-height: 80vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .title-slide { background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%); color: white; text-align: center; }
+        .title-slide h1 { font-size: 4em; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .title-slide .subtitle { font-size: 1.5em; opacity: 0.9; margin-bottom: 40px; }
+        .session-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 10px 30px; border-radius: 50px; font-size: 1.2em; margin-top: 20px; }
+        h2 { color: #dc2626; font-size: 2.4em; margin-bottom: 30px; border-bottom: 4px solid #4856F6; padding-bottom: 15px; }
+        h3 { color: #212121; font-size: 1.7em; margin: 25px 0 18px 0; }
+        h4 { color: #78909C; font-size: 1.3em; margin: 22px 0 12px 0; }
+        p { font-size: 1.18em; line-height: 1.8; margin-bottom: 18px; }
+        .concept-box { background: #f5f5f5; border-left: 5px solid #dc2626; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .concept-box strong { color: #dc2626; font-size: 1.25em; }
+        .highlight { background: #fff3e0; padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #EC8423; }
+        code { background: #263238; color: #aed581; padding: 3px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.92em; }
+        pre { background: #263238; color: #aed581; padding: 20px; border-radius: 10px; overflow-x: auto; margin: 20px 0; font-size: 0.95em; line-height: 1.55; }
+        ul, ol { margin-left: 40px; margin-bottom: 20px; }
+        li { font-size: 1.08em; line-height: 1.75; margin-bottom: 10px; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0; }
+        .column { background: #f8f9fa; padding: 20px; border-radius: 10px; }
+        .gotcha { background: #fef2f2; border: 2px dashed #ef4444; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        .gotcha::before { content: "⚠️ The tricky part: "; font-weight: bold; color: #b91c1c; font-size: 1.15em; }
+        .win { background: #ecfdf5; border-left: 5px solid #10b981; padding: 18px; margin: 18px 0; border-radius: 5px; }
+        .win::before { content: "✅ Why it's good: "; font-weight: bold; color: #047857; }
+        .key-takeaway { background: #fff3e0; border-left: 5px solid #EC8423; padding: 20px; margin: 25px 0; border-radius: 5px; font-size: 1.08em; }
+        .key-takeaway::before { content: "🎯 Key Takeaway: "; font-weight: bold; color: #EC8423; }
+        .interview { background: #ede9fe; border-left: 5px solid #7c3aed; padding: 20px 25px; margin: 20px 0; border-radius: 8px; }
+        .interview .q { font-weight: 700; color: #6d28d9; font-size: 1.12em; margin-bottom: 8px; }
+        .interview .a { font-size: 1.05em; line-height: 1.65; color: #333; }
+        .level-pill { position: absolute; top: 25px; right: 35px; background: #ef4444; color: white; padding: 6px 18px; border-radius: 50px; font-weight: 700; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #dc2626; color: white; font-weight: 600; }
+        tr:hover { background: #f5f5f5; }
+        @media print { .slide { page-break-after: always; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="slide title-slide">
+        <div class="session-badge" style="margin-bottom:30px;">LEVEL 3 OF 3</div>
+        <h1>🔴 Hard</h1>
+        <div class="subtitle">Defend every design decision</div>
+        <p style="margin-top: 20px; font-size: 1.2em; opacity: 0.95;">The "why", the trade-offs, and the deep follow-ups</p>
+    </div>
+
+    <!-- Decision 1: Redis between controller and worker -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>① Why Redis Between Controller & Worker?</h2>
+        <p>The controller <em>could</em> just inject <code>IHubContext</code> and broadcast directly. Routing through Redis pub/sub buys three things:</p>
+        <ul>
+            <li><strong>Decoupling from the request lifecycle</strong> — the HTTP request returns the instant the event is published; the slower fan-out happens off the request thread.</li>
+            <li><strong>Horizontal scaling</strong> — see the next slide; this is the real payoff.</li>
+            <li><strong>Single broadcast path</strong> — every event type flows through one worker, one place to log/handle/extend.</li>
+        </ul>
+        <div class="gotcha">This is an <strong>application-level</strong> pub/sub, which is different from the official <span class="highlight">SignalR Redis backplane</span>. Know the distinction — interviewers probe this.</div>
+    </div>
+
+    <!-- Scaling mechanics -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>① How It Scales Across Instances</h2>
+        <pre>Instance A  ─ worker subscribes "order-events"  ─ clients A1, A2
+Instance B  ─ worker subscribes "order-events"  ─ clients B1, B2
+
+Order placed on A:
+  A publishes to Redis "order-events"
+  Redis delivers to ALL subscribers (A's worker AND B's worker)
+  A's worker → broadcasts to A1, A2   (its local IHubContext)
+  B's worker → broadcasts to B1, B2   (its local IHubContext)
+  → every client updates, no duplicates per client</pre>
+        <div class="win">Each client is connected to exactly one instance, and each instance broadcasts only to its own connections. Redis pub/sub fans the trigger out to every instance — so it behaves like a lightweight backplane for <em>this app's</em> events.</div>
+        <div class="gotcha">For a <strong>production</strong> multi-instance setup you'd still add the real <code>AddStackExchangeRedis()</code> SignalR backplane so framework concerns (groups, <code>Clients.All</code> across servers, sticky-session-free reconnects) work correctly. Our design handles the custom events; the backplane handles the SignalR plumbing.</div>
+    </div>
+
+    <!-- Decision 2: Hub in Infrastructure -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>② Why Is the Hub in Infrastructure, Not the API?</h2>
+        <p>The brief put <code>OrderHub</code> in the API project. But the <code>OrderEventWorker</code> (Infrastructure) needs <code>IHubContext&lt;OrderHub&gt;</code> — it must reference the hub <em>type</em>.</p>
+        <pre>API            ──references──►  Infrastructure
+Infrastructure ──needs────────►  OrderHub (the type)
+
+If OrderHub lived in API:
+  Infrastructure ──would need──► API   ❌ circular reference</pre>
+        <div class="win">Moving <code>OrderHub</code> into Infrastructure breaks the cycle. The API still owns the route via <code>app.MapHub&lt;OrderHub&gt;("/hubs/orders")</code> — mapping only needs the type, which it already references.</div>
+        <p>Alternative I considered: define a broadcasting <em>interface</em> in Application, implement it in API, and inject it into the worker. That keeps the hub in API but adds indirection. For this size, relocating the hub is the cleaner call — and I can articulate both.</p>
+    </div>
+
+    <!-- Decision 3: scoped service in singleton worker -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>③ Scoped Services in a Singleton Worker</h2>
+        <p>A <code>BackgroundService</code> is registered as a <strong>singleton</strong>. But <code>DashboardStatsService</code> depends on <code>DbContext</code>, which is <strong>scoped</strong>. You cannot inject a scoped service into a singleton — it would capture one DbContext for the app's lifetime (a classic <span class="highlight">captive dependency</span> bug, and DbContext isn't thread-safe).</p>
+        <pre>// Inside the worker, per message:
+using var scope = _scopeFactory.CreateScope();
+var stats = scope.ServiceProvider
+    .GetRequiredService&lt;IDashboardStatsService&gt;();
+await stats.GetCurrentStatsAsync(ct);</pre>
+        <div class="win">The worker injects <code>IServiceScopeFactory</code> and creates a fresh scope per broadcast, giving each message its own short-lived DbContext — safe and correct.</div>
+    </div>
+
+    <!-- Decision 4: worker resilience -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>④ Worker Resilience & Host Lifetime</h2>
+        <p>By default, if a <code>BackgroundService</code> throws an unhandled exception, the host's <code>BackgroundServiceExceptionBehavior</code> is <code>StopHost</code> — <strong>the whole app dies</strong>.</p>
+        <div class="gotcha">During <code>docker compose up</code>, the API can boot before Redis is ready. A naive <code>SubscribeAsync</code> would throw <code>RedisConnectionException</code> → host stops. I hit exactly this.</div>
+        <h3>The fix</h3>
+        <ul>
+            <li>Wrap the subscription in a <strong>retry loop with exponential backoff</strong> (2s → capped at 30s), respecting the cancellation token.</li>
+            <li>Per-message handler is wrapped in try/catch and logs — a single malformed message never tears down the subscriber (there's a unit test for this).</li>
+            <li>Redis client configured with <code>AbortOnConnectFail = false</code> so it keeps retrying the connection.</li>
+        </ul>
+    </div>
+
+    <!-- Decision 5: JSON contract -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>⑤ One JSON Contract Everywhere</h2>
+        <p>Three serialization boundaries must agree: <strong>controllers</strong>, <strong>SignalR payloads</strong>, and <strong>Redis cache/messages</strong>.</p>
+        <div class="gotcha">If they disagree, the enum <code>OrderStatus.Pending</code> serializes as <code>0</code> in one place and <code>"Pending"</code> in another. The React <code>StatusBadge</code> keys on the string — a number breaks it silently.</div>
+        <pre>// JsonDefaults — shared by all three boundaries
+PropertyNamingPolicy = CamelCase
+Converters.Add(new JsonStringEnumConverter());</pre>
+        <div class="win">A single <code>JsonDefaults.Options</code> is reused for the API JSON options, <code>AddJsonProtocol</code> on SignalR, and Redis (de)serialization. Enums are always strings, names always camelCase — the client sees one consistent contract.</div>
+    </div>
+
+    <!-- Decision 6: EF gotchas -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>⑥ Two EF Core Gotchas I Hit</h2>
+        <h3>SQLite can't <code>SUM</code> a decimal</h3>
+        <p>SQLite has no native decimal aggregate. <code>SumAsync(o =&gt; o.TotalAmount)</code> throws at runtime. Fix: pull today's amounts and sum in memory — a deliberate, documented client-side evaluation.</p>
+        <h3>Mapperly can't run inside an EF projection</h3>
+        <p>Calling a Mapperly method inside <code>.Select(o =&gt; _mapper.ToSummary(o))</code> fails — EF can't translate an arbitrary method to SQL. Fix: <code>.ToListAsync()</code> first (materialize), <em>then</em> map in memory.</p>
+        <div class="key-takeaway">Both are about understanding the <span class="highlight">client-vs-server evaluation boundary</span> in EF Core — a favourite interview topic.</div>
+    </div>
+
+    <!-- Honest limitations -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>⑦ Known Limitations (Be Honest)</h2>
+        <p>Showing you know the edges earns more trust than pretending there are none.</p>
+        <table>
+            <tr><th>Area</th><th>Limitation</th><th>How I'd fix it</th></tr>
+            <tr><td>Order number</td><td><code>count + 1</code> races under concurrency → possible duplicate numbers</td><td>DB sequence, or Redis <code>INCR</code>, or a unique constraint + retry</td></tr>
+            <tr><td>Pub/Sub delivery</td><td>Redis pub/sub is fire-and-forget — if the worker is down, the event is lost</td><td>Redis Streams / a real broker (RabbitMQ) for at-least-once + replay</td></tr>
+            <tr><td>Active connections</td><td>Counter can drift on ungraceful shutdown</td><td>Periodic reconcile, or TTL'd per-connection keys</td></tr>
+            <tr><td>Stats refresh</td><td>Refreshed in the service <em>and</em> re-fetched in the worker (slight double work)</td><td>Publish the computed stats in the event payload</td></tr>
+        </table>
+    </div>
+
+    <!-- Security + testing -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>⑧ Security & Testing Details</h2>
+        <div class="two-column">
+            <div class="column">
+                <h4>🔐 Security</h4>
+                <ul>
+                    <li>JWT validated on issuer, audience, signing key, lifetime, with a 30s clock-skew tolerance</li>
+                    <li>Refresh token + expiry stored per user; refresh validates both</li>
+                    <li>CORS allows the Vite origin <em>with credentials</em> (required for SignalR)</li>
+                    <li>Role checks via <code>[Authorize(Roles="Admin")]</code></li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>🧪 Testing</h4>
+                <ul>
+                    <li><code>InternalsVisibleTo</code> exposes the worker's handler so I can test it directly</li>
+                    <li>Mock <code>IHubContext</code> by verifying <code>SendCoreAsync</code> (since <code>SendAsync</code> is an extension method)</li>
+                    <li>Integration: <code>WebApplicationFactory</code> swaps in in-memory EF + a mocked <code>IConnectionMultiplexer</code></li>
+                    <li>Seeder uses <code>EnsureCreated</code> for non-relational (test) providers, <code>Migrate</code> for relational</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview 1 -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>🎤 Hard Interview Questions</h2>
+        <div class="interview"><div class="q">Q: Why not call IHubContext straight from the controller?</div><div class="a">It works for one instance, but it couples the broadcast to the request thread and doesn't scale. Routing through Redis lets the request return immediately and lets every API instance's worker broadcast to its own clients — the groundwork for horizontal scaling.</div></div>
+        <div class="interview"><div class="q">Q: Isn't this just the SignalR Redis backplane?</div><div class="a">No — it's app-level pub/sub for my domain events. The official backplane handles SignalR's own cross-server plumbing (groups, Clients.All). In production I'd use both: the backplane for framework concerns, my channel for triggering domain broadcasts.</div></div>
+        <div class="interview"><div class="q">Q: How does a singleton background service use a scoped DbContext?</div><div class="a">It can't inject one directly — that's a captive dependency and DbContext isn't thread-safe. I inject IServiceScopeFactory and create a fresh scope per message.</div></div>
+    </div>
+
+    <!-- Interview 2 -->
+    <div class="slide">
+        <span class="level-pill">HARD</span>
+        <h2>🎤 Hard Interview Questions (cont.)</h2>
+        <div class="interview"><div class="q">Q: What happens if Redis is down when the app starts?</div><div class="a">The worker retries the subscription with backoff instead of throwing — otherwise the default StopHost behavior would kill the app. The Redis client also uses AbortOnConnectFail=false.</div></div>
+        <div class="interview"><div class="q">Q: Is delivery guaranteed?</div><div class="a">No. Redis pub/sub is fire-and-forget — if no subscriber is listening, the message is dropped. For at-least-once delivery and replay I'd move to Redis Streams or a broker like RabbitMQ.</div></div>
+        <div class="interview"><div class="q">Q: How do you keep the enum serialization consistent?</div><div class="a">A single shared JsonSerializerOptions (camelCase + JsonStringEnumConverter) reused across controllers, the SignalR JSON protocol, and Redis. So OrderStatus is always "Pending", never 0.</div></div>
+        <div class="interview"><div class="q">Q: What would you improve with more time?</div><div class="a">Concurrency-safe order numbering, durable messaging, the SignalR backplane for true multi-instance, and pushing computed stats inside the event payload to avoid a second DB read.</div></div>
+    </div>
+
+    <div class="slide title-slide">
+        <h1>You've got this 💪</h1>
+        <div class="subtitle">Easy → Medium → Hard, end to end</div>
+        <p style="margin-top:20px; font-size:1.1em; opacity:0.95;">If you can explain slide ① and ②, you can defend the whole architecture.</p>
+    </div>
+
+</div>
+<script>
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp') window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🟢 Easy — Real-Time Order Tracking Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333; overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .slide {
+            background: white; border-radius: 20px; padding: 60px; margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-height: 80vh;
+            display: flex; flex-direction: column; justify-content: center; position: relative;
+        }
+        .title-slide { background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); color: white; text-align: center; }
+        .title-slide h1 { font-size: 4em; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .title-slide .subtitle { font-size: 1.5em; opacity: 0.9; margin-bottom: 40px; }
+        .session-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 10px 30px; border-radius: 50px; font-size: 1.2em; margin-top: 20px; }
+        h2 { color: #16a34a; font-size: 2.5em; margin-bottom: 30px; border-bottom: 4px solid #EC8423; padding-bottom: 15px; }
+        h3 { color: #212121; font-size: 1.8em; margin: 30px 0 20px 0; }
+        h4 { color: #78909C; font-size: 1.4em; margin: 25px 0 15px 0; }
+        p { font-size: 1.2em; line-height: 1.8; margin-bottom: 20px; }
+        .concept-box { background: #f5f5f5; border-left: 5px solid #16a34a; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .concept-box strong { color: #16a34a; font-size: 1.3em; }
+        .highlight { background: #fff3e0; padding: 2px 8px; border-radius: 4px; font-weight: 600; color: #EC8423; }
+        code { background: #263238; color: #aed581; padding: 3px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.95em; }
+        pre { background: #263238; color: #aed581; padding: 20px; border-radius: 10px; overflow-x: auto; margin: 20px 0; font-size: 1em; line-height: 1.6; }
+        ul, ol { margin-left: 40px; margin-bottom: 20px; }
+        li { font-size: 1.1em; line-height: 1.8; margin-bottom: 12px; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0; }
+        .column { background: #f8f9fa; padding: 20px; border-radius: 10px; }
+        .flow-diagram { background: white; border: 2px solid #16a34a; padding: 30px; border-radius: 10px; text-align: center; margin: 30px 0; font-size: 1.1em; line-height: 2; }
+        .key-takeaway { background: #fff3e0; border-left: 5px solid #EC8423; padding: 20px; margin: 30px 0; border-radius: 5px; font-size: 1.1em; }
+        .key-takeaway::before { content: "🎯 Key Takeaway: "; font-weight: bold; color: #EC8423; }
+        .interview { background: #ede9fe; border-left: 5px solid #7c3aed; padding: 20px 25px; margin: 20px 0; border-radius: 8px; }
+        .interview .q { font-weight: 700; color: #6d28d9; font-size: 1.15em; margin-bottom: 8px; }
+        .interview .a { font-size: 1.1em; line-height: 1.7; color: #333; }
+        .level-pill { position: absolute; top: 25px; right: 35px; background: #22c55e; color: white; padding: 6px 18px; border-radius: 50px; font-weight: 700; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 1em; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #16a34a; color: white; font-weight: 600; }
+        tr:hover { background: #f5f5f5; }
+        @media print { .slide { page-break-after: always; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- Title -->
+    <div class="slide title-slide">
+        <div class="session-badge" style="margin-bottom:30px;">LEVEL 1 OF 3</div>
+        <h1>🟢 Easy</h1>
+        <div class="subtitle">Real-Time Order Tracking Dashboard</div>
+        <p style="margin-top: 20px; font-size: 1.2em; opacity: 0.95;">What is this project, in plain language?</p>
+        <div class="session-badge">SignalR · Redis · ASP.NET Core · React</div>
+    </div>
+
+    <!-- The pitch -->
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>The One-Sentence Pitch</h2>
+        <div class="concept-box">
+            <strong>Memorize this:</strong> "It's a real-time order dashboard where an ASP.NET Core API <span class="highlight">pushes</span> live updates to a React client over a SignalR WebSocket, and Redis pub/sub decouples the broadcast from the request that triggered it."
+        </div>
+        <h3>What does it actually do?</h3>
+        <p>Imagine the screen a shop manager watches all day. Every time a customer places an order, it appears on the dashboard <strong>instantly</strong> — no refresh, no waiting. The revenue counter ticks up, the "pending orders" number changes, and low-stock warnings pop up automatically.</p>
+        <div class="key-takeaway">The whole point is that the screen updates <span class="highlight">by itself, the moment something happens</span>.</div>
+    </div>
+
+    <!-- Problem -->
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>The Problem It Solves</h2>
+        <div class="two-column">
+            <div class="column">
+                <h4>❌ The old way: Polling</h4>
+                <p>The browser keeps <em>asking</em> the server "anything new? anything new?" every second.</p>
+                <ul>
+                    <li>Wasteful — usually the answer is "no"</li>
+                    <li>Updates still lag by up to a second</li>
+                    <li>100 users = 100 requests/second of noise</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h4>✅ This project: Pushing</h4>
+                <p>The server <em>pushes</em> updates to the browser <strong>only when something changes</strong>.</p>
+                <ul>
+                    <li>Instant — zero polling</li>
+                    <li>One permanent connection per user</li>
+                    <li>Done with <span class="highlight">SignalR</span> (WebSockets)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Two halves -->
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>The Two Halves</h2>
+        <table>
+            <tr><th>Half</th><th>What it is</th><th>Technology</th></tr>
+            <tr><td><strong>Backend</strong></td><td>The server: stores data, handles logins, pushes live updates</td><td>ASP.NET Core (C#)</td></tr>
+            <tr><td><strong>Frontend</strong></td><td>The dashboard you look at in the browser</td><td>React (TypeScript)</td></tr>
+        </table>
+        <h3>The key ingredients in plain words</h3>
+        <ul>
+            <li><strong>SignalR</strong> — lets the server <em>push</em> messages to the browser live. Like a phone line that stays open instead of texting back and forth.</li>
+            <li><strong>WebSocket</strong> — the actual "always-open connection" SignalR uses.</li>
+            <li><strong>Redis</strong> — a super-fast store used as a "message bus" (drop a note saying "an order happened!") and as a cache for the dashboard numbers.</li>
+            <li><strong>Database (SQLite)</strong> — where orders, products, and users are permanently saved.</li>
+            <li><strong>JWT</strong> — a secure token you get when you log in that proves who you are.</li>
+            <li><strong>Docker</strong> — packages everything so it runs with one command.</li>
+        </ul>
+    </div>
+
+    <!-- Flow -->
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>How It Works (Simplest Version)</h2>
+        <div class="flow-diagram">
+            You place an order<br>⬇<br>
+            Server saves it to the database<br>⬇<br>
+            Server announces <strong>"new order!"</strong><br>⬇<br>
+            Every open dashboard hears it and <span class="highlight">updates instantly</span>
+        </div>
+        <h3>What you can do in the app</h3>
+        <ul>
+            <li><strong>Log in</strong> — two demo accounts: an admin and a customer.</li>
+            <li><strong>See live stats</strong> — orders today, revenue today, pending orders, active connections.</li>
+            <li><strong>See a live order list</strong> — new orders appear at the top automatically.</li>
+            <li><strong>Place an order</strong> — and watch the dashboard update in real time.</li>
+            <li><strong>Get low-stock warnings</strong> — a toast pops up when a product drops below 5.</li>
+        </ul>
+    </div>
+
+    <!-- Interview -->
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>🎤 Interview Questions</h2>
+        <div class="interview"><div class="q">Q: What does this project do?</div><div class="a">It's a dashboard showing live order activity for a store. When an order is placed or changes status, every connected dashboard updates instantly without refreshing.</div></div>
+        <div class="interview"><div class="q">Q: What makes it "real-time"?</div><div class="a">SignalR, built on WebSockets. It keeps a permanent connection open so the server can push updates the moment they happen.</div></div>
+        <div class="interview"><div class="q">Q: Why not just poll the server?</div><div class="a">Polling wastes resources and still lags. Pushing with SignalR is instant and only sends data when something actually changes.</div></div>
+    </div>
+
+    <div class="slide">
+        <span class="level-pill">EASY</span>
+        <h2>🎤 Interview Questions (cont.)</h2>
+        <div class="interview"><div class="q">Q: What did you use for frontend and backend?</div><div class="a">React with TypeScript on the frontend, ASP.NET Core (C#) on the backend, with Redis and a SQL database behind it.</div></div>
+        <div class="interview"><div class="q">Q: What is Redis used for, simply?</div><div class="a">Two things: a fast cache for the dashboard numbers, and a "message bus" — when an order happens the API drops a message into Redis, and a background process picks it up and broadcasts it.</div></div>
+        <div class="interview"><div class="q">Q: How do you run it?</div><div class="a">One command: <code>docker compose up</code>. That starts the database/Redis, the API, and the frontend together.</div></div>
+        <div class="key-takeaway">Next up → <strong>02-medium.html</strong>: how the pieces actually fit together.</div>
+    </div>
+
+</div>
+<script>
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown') window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp') window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
