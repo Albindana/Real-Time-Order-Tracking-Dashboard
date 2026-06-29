@@ -91,6 +91,19 @@ cd frontend && npm install && npm run dev
 
 The database (SQLite) is created and seeded automatically on first run.
 
+### Local URLs
+
+Once the stack is up, open these in your browser:
+
+| Service | Docker (`docker compose up`) | Local (hybrid) |
+|---|---|---|
+| 🖥️ Dashboard (frontend) | http://localhost:5173 | http://localhost:5173 |
+| 🔌 API base | http://localhost:5001 | http://localhost:5011 |
+| 📖 Swagger UI | http://localhost:5001/swagger | http://localhost:5011/swagger |
+| 🔁 SignalR hub | ws://localhost:5001/hubs/orders | ws://localhost:5011/hubs/orders |
+
+> **Tip:** if `localhost:5173` shows the wrong app (e.g. another local dev server bound to the same port over IPv6), use **http://127.0.0.1:5173** instead.
+
 ---
 
 ## Seeded Accounts
