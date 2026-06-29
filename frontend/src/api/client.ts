@@ -49,6 +49,17 @@ export const api = {
       body: JSON.stringify({ email, password }),
     }),
 
+  register: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+  ) =>
+    request<AuthResponse>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, firstName, lastName }),
+    }),
+
   getStats: () => request<DashboardStats>('/api/dashboard/stats'),
 
   getRecentOrders: () => request<OrderSummary[]>('/api/dashboard/recent'),
